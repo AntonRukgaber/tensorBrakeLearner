@@ -14,6 +14,9 @@ test_data = pd.read_csv("../data/shortTestData.csv")
 train_targets = train_data.TimeTillFailure
 test_targets = test_data.TimeTillFailure
 
+train_data = train_data.drop(["TimeTillFailure"], axis=1)
+test_data = test_data.drop(["TimeTillFailure"], axis=1)
+
 train_data['Number'] = [S.replace("brakes", "") for S in train_data['Number']]
 test_data['Number'] = [S.replace("brakes", "") for S in test_data['Number']]
 
@@ -35,9 +38,9 @@ partValData = train_data[breakPoint:]
 partValTargets = train_targets[breakPoint:]
 
 model = build_model()
-cb = callbacks.ModelCheckpoint("../data/learner.h5", monitor='val_mean_absolute_error', verbose=0, save_best_only=False, save_weights_only=False, mode='auto', period=1)
+cb = callbacks.ModelCheckpoint("../data/learner.h5", monitor='val_mean_absolute_error', save_best_only=False, save_weights_only=False, mode='auto', period=1)
 history = model.fit(partTrainData, partTrainTargets, validation_data=(partValData, partValTargets), epochs=num_epochs,
-                    batch_size=3, verbose=0, callbacks=[cb])
+                    batch_size=3, callbacks=[cb])
 """testMSEScore, testMAEScore = model.evaluate(test_data, test_targets)
 
 
